@@ -1,0 +1,70 @@
+- id: '1669000240286'
+  alias: Living Room Lamps Auto
+  description: Turn on at 30 minutes before sunset, turn off at 9:30pm
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: -00:30:00
+    id: Sunset
+  - platform: time
+    at: '21:30:00'
+    id: 930pm
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 930pm
+      sequence:
+      - service: light.turn_off
+        data:
+          transition: 5
+        target:
+          entity_id: light.living_room_end_table_lamps
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: Sunset
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_pct: 100
+          transition: 5
+        target:
+          entity_id: light.living_room_end_table_lamps
+  mode: single
+- id: '1679539697898'
+  alias: Exterior Scones
+  description: Turn on at 30 minutes before sunset, turn off one hour after sunrise
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: -00:30:00
+    id: Sunset-.5
+  - platform: sun
+    event: sunrise
+    offset: +01:00:00
+    id: Sunrise+1
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: Sunrise+1
+        alias: When triggered by sunrise plus one hour
+      sequence:
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id: switch.exterior_sconces
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: Sunset-.5
+        alias: When triggered by sunset minus 30 minutes
+      sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.exterior_sconces
+  mode: single
