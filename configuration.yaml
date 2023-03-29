@@ -10,6 +10,10 @@ frontend:
 tts:
   - platform: google_translate
 
+http:
+  ssl_certificate: /ssl/Home+Assistant.crt
+  ssl_key: /ssl/Home+Assistant.key
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
