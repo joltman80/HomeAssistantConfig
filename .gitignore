@@ -5,12 +5,15 @@
 !*.yaml
 !.gitignore
 !*.md
+!esphome/
 
 # Ignore folders.
 .storage
 .cloud
 .google.token
 tts/
+esphome/.esphome
+esphome/secrets.yaml
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml
