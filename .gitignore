@@ -19,3 +19,4 @@ known_devices.yaml
 ./*.pem
 ./*.log*
 ./*.db*
+./esphome/.esphome
