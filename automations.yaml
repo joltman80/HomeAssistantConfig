@@ -68,3 +68,115 @@
         target:
           entity_id: switch.exterior_sconces
   mode: single
+- id: '1691682104476'
+  alias: Charlie's Mario Lights
+  description: ''
+  trigger:
+  - platform: device
+    device_id: a8828617c31795cfa143af8ea4546fc0
+    domain: lutron_caseta
+    type: press
+    subtype: 'on'
+    id: CAD_Pico_On
+  - platform: device
+    device_id: a8828617c31795cfa143af8ea4546fc0
+    domain: lutron_caseta
+    type: press
+    subtype: 'off'
+    id: CAD_Pico_Off
+  - platform: device
+    device_id: a8828617c31795cfa143af8ea4546fc0
+    domain: lutron_caseta
+    type: press
+    subtype: stop
+    id: CAD_Pico_Fave
+  - platform: device
+    device_id: a8828617c31795cfa143af8ea4546fc0
+    domain: lutron_caseta
+    type: press
+    subtype: raise
+    id: CAD_Pico_Raise
+  - platform: device
+    device_id: a8828617c31795cfa143af8ea4546fc0
+    domain: lutron_caseta
+    type: press
+    subtype: lower
+    id: CAD_Pico_Lower
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - CAD_Pico_On
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_pct: 100
+        target:
+          entity_id:
+          - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
+          - light.charlies_analog_dimmer_cad1_led_super_star_light_output_2
+      - service: input_select.select_option
+        data:
+          option: 'ON'
+        target:
+          entity_id: input_select.charlie_s_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - CAD_Pico_Off
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id:
+          - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
+          - light.charlies_analog_dimmer_cad1_led_super_star_light_output_2
+      - service: input_select.select_option
+        data:
+          option: 'OFF'
+        target:
+          entity_id: input_select.charlie_s_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - CAD_Pico_Fave
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_pct: 25
+        target:
+          entity_id:
+          - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
+          - light.charlies_analog_dimmer_cad1_led_super_star_light_output_2
+      - service: input_select.select_option
+        data:
+          option: DIM
+        target:
+          entity_id: input_select.charlie_s_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - CAD_Pico_Raise
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_step_pct: 5
+        target:
+          entity_id:
+          - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
+          - light.charlies_analog_dimmer_cad1_led_super_star_light_output_2
+    - conditions:
+      - condition: trigger
+        id:
+        - CAD_Pico_Lower
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_step_pct: -5
+        target:
+          entity_id:
+          - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
+          - light.charlies_analog_dimmer_cad1_led_super_star_light_output_2
+  mode: single
