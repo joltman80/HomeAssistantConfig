@@ -113,6 +113,7 @@
       - service: light.turn_on
         data:
           brightness_pct: 100
+          transition: 1
         target:
           entity_id:
           - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
@@ -128,7 +129,8 @@
         - CAD_Pico_Off
       sequence:
       - service: light.turn_off
-        data: {}
+        data:
+          transition: 2
         target:
           entity_id:
           - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
@@ -146,6 +148,7 @@
       - service: light.turn_on
         data:
           brightness_pct: 25
+          transition: 1
         target:
           entity_id:
           - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
@@ -212,7 +215,8 @@
       seconds: 0
       milliseconds: 0
   - service: light.turn_off
-    data: {}
+    data:
+      transition: 5
     target:
       entity_id:
       - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
