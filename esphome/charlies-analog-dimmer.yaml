@@ -61,22 +61,22 @@ output:
 light:
   - platform: monochromatic
     name: "CAD1_LED Mushroom Light (output 1)"
-    default_transition_length: 5s
+    default_transition_length: 0s
     output: LED_gpio_16
     
   - platform: monochromatic
     name: "CAD1_LED Super Star Light (output 2)"
-    default_transition_length: 5s
+    default_transition_length: 0s
     output: LED_gpio_17
     
   - platform: monochromatic
     name: "CAD1_LED Light (output 3)"
-    default_transition_length: 5s
+    default_transition_length: 0s
     output: LED_gpio_5
     
   - platform: monochromatic
     name: "CAD1_LED Light (output 4)"
-    default_transition_length: 5s
+    default_transition_length: 0s
     output: LED_gpio_19
     
 sensor:
