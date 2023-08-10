@@ -180,3 +180,41 @@
           - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
           - light.charlies_analog_dimmer_cad1_led_super_star_light_output_2
   mode: single
+- id: '1691682551603'
+  alias: Charlie's Bedtime Lights Automation
+  description: Turn off Charlie's lights after 30 minutes if the time is between two
+    times which are around his bedtime.
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.charlie_s_lights
+    to: DIM
+  - platform: state
+    entity_id:
+    - input_select.charlie_s_lights
+    to: 'ON'
+  condition:
+  - condition: time
+    after: '19:45:00'
+    before: '22:00:00'
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  action:
+  - delay:
+      hours: 0
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
+      - light.charlies_analog_dimmer_cad1_led_super_star_light_output_2
+  mode: single
