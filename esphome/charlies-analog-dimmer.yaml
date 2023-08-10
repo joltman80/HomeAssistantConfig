@@ -1,0 +1,85 @@
+esphome:
+  name: charlies-analog-dimmer
+  friendly_name: Charlies Analog Dimmer
+
+esp32:
+  board: mhetesp32devkit
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret CAD1_API
+
+ota:
+  password: "8ecdd77b9aff0e46d30e57b436b8cc2a"
+
+wifi:
+  ssid: !secret HomeNet24_ssid
+  password: !secret HomeNet_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Charlies-Analog-Dimmer"
+    password: "AJSaBqfdgAHZ"
+
+captive_portal:
+
+dallas:
+  - pin: GPIO18
+
+switch:
+  - platform: gpio
+    name: "CAD1_Onboard light"
+    pin: 2
+    
+output:
+  - platform: ledc
+    pin: 16
+    frequency: 40000Hz
+    id: LED_gpio_16
+
+  - platform: ledc
+    pin: 17
+    frequency: 40000Hz
+    id: LED_gpio_17
+
+  - platform: ledc
+    pin: 5
+    frequency: 40000Hz
+    id: LED_gpio_5
+
+  - platform: ledc
+    pin: 19
+    frequency: 40000Hz
+    id: LED_gpio_19
+    
+light:
+  - platform: monochromatic
+    name: "CAD1_LED Mushroom Light (output 1)"
+    default_transition_length: 5s
+    output: LED_gpio_16
+    
+  - platform: monochromatic
+    name: "CAD1_LED Super Star Light (output 2)"
+    default_transition_length: 5s
+    output: LED_gpio_17
+    
+  - platform: monochromatic
+    name: "CAD1_LED Light (output 3)"
+    default_transition_length: 5s
+    output: LED_gpio_5
+    
+  - platform: monochromatic
+    name: "CAD1_LED Light (output 4)"
+    default_transition_length: 5s
+    output: LED_gpio_19
+    
+sensor:
+  - platform: dallas
+    index: 0
+    name: "CAD1_tempsensor"    
