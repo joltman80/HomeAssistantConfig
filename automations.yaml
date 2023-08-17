@@ -196,6 +196,26 @@
     entity_id:
     - input_select.charlie_s_lights
     to: 'ON'
+  - platform: state
+    entity_id:
+    - input_select.charlie_s_lights
+    from: unavailable
+    to: DIM
+  - platform: state
+    entity_id:
+    - input_select.charlie_s_lights
+    from: unknown
+    to: DIM
+  - platform: state
+    entity_id:
+    - input_select.charlie_s_lights
+    from: unavailable
+    to: 'ON'
+  - platform: state
+    entity_id:
+    - input_select.charlie_s_lights
+    from: unknown
+    to: 'ON'
   condition:
   - condition: time
     after: '19:45:00'
