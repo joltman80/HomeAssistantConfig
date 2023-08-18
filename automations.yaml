@@ -241,4 +241,9 @@
       entity_id:
       - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1
       - light.charlies_analog_dimmer_cad1_led_super_star_light_output_2
+  - service: input_select.select_option
+    data:
+      option: 'OFF'
+    target:
+      entity_id: input_select.charlie_s_lights
   mode: single
