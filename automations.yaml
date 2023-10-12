@@ -216,6 +216,16 @@
     - input_select.charlie_s_lights
     from: unknown
     to: 'ON'
+  - platform: state
+    entity_id:
+    - input_select.charlie_s_lights
+    from: 'ON'
+    to: 'ON'
+  - platform: state
+    entity_id:
+    - input_select.charlie_s_lights
+    from: DIM
+    to: DIM
   condition:
   - condition: time
     after: '19:45:00'
