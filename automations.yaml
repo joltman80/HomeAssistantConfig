@@ -257,3 +257,40 @@
     target:
       entity_id: input_select.charlie_s_lights
   mode: single
+- id: '1700882416969'
+  alias: Christmas Lights
+  description: Turn on all Christmas Lights 30 minutes before sunset, turn off at
+    9:30pm
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: -00:30:00
+    id: Sunset
+  - platform: time
+    at: '21:30:00'
+    id: 930pm
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 930pm
+      sequence:
+      - service: light.turn_off
+        data:
+          transition: 5
+        target:
+          entity_id:
+          - light.christmas_lights
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: Sunset
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_pct: 100
+          transition: 5
+        target:
+          entity_id: light.christmas_lights
+  mode: single
