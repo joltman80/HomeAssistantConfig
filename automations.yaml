@@ -34,7 +34,7 @@
           entity_id: light.living_room_end_table_lamps
   mode: single
 - id: '1679539697898'
-  alias: Exterior Scones
+  alias: Exterior Sconces
   description: Turn on at 30 minutes before sunset, turn off one hour after sunrise
   trigger:
   - platform: sun
@@ -267,14 +267,15 @@
     offset: -00:30:00
     id: Sunset
   - platform: time
-    at: '21:30:00'
-    id: 930pm
+    at: '22:30:00'
+    id: 1030pm
   condition: []
   action:
   - choose:
     - conditions:
       - condition: trigger
-        id: 930pm
+        id:
+        - 1030pm
       sequence:
       - service: light.turn_off
         data:
