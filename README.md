@@ -41,3 +41,28 @@ Host homeassistant_IP/DNS_Here
 ```
 
 Save the file.  Go back to the REMOTE EXPLORER and hit the REFRESH icon at the top of REMOTES (TUNNEL/SSH).  You can now connect to your Home Assistant instance with your remote VS Code client.
+
+## MQTT Config
+
+In Home Assistant go to SETTINGS > ADD-ONS and click on the ADD-ON STORE.  Find "Mosquitto Broker" and install it.  In Home Assistant, go to SETTINGS > PEOPLE > USERS (tab on the top of the page).  Click ADD USER.  Create a mosquitto broker user with the following properties:
+
+Display Name: MQTT Broker User
+Username:  mqttbrokeruser
+Password:  Generate a strong password here.
+
+Do not check CAN ONLY LOG IN FROM THE LOCAL NETWORK and ADMINISTRATOR
+
+## RATGDO Config
+
+When you receive your RATGDO, plug it into your laptop, open Chrome/Chromium and navigate to (this webpage)[https://paulwieland.github.io/ratgdo/flash.html].  Use the MQTT option and choose the firmware version that corresponds to your device.  Follow the steps to flash the firmware.  In Linux, the serial port with be ttyUSB0.  Once the device is flashed, you will be prompted to enter the 2.4GHz WiFi network that the device should join.  After you enter that info, you will be sent to the config webpage.  Here you will need to create an OTA/Web Config Password.  Add this along with the DEVICE NAME & WEB CONFIG USERNAME to your password database.  Enter the following info:
+
+MQTT SERVER IP: Home Assitant IP Address
+MQTT SERVER PORT:  1883 (default for Mosquitto)
+MQTT SERVER USERNAME:  mqttbrokeruser (user you created above)
+MPTT SERVER PASSWORD:  password you created above
+MQTT TOPIC PREFIX:  /home/garage/MainDoor
+HOME ASSISTANT DISCOVERY PREFIX:  homeassistant (the default on the page already)
+GARAGE DOOR CONTROL PROTOCOL:  Enter the correct protocol for the GDO, not the wall panel
+
+Save the config and reboot.
+
