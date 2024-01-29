@@ -22,3 +22,19 @@ homeassistant:
   customize:
     zone.home:
       radius: 40
+
+#NOTIFICATION GROUP:
+notify:
+  - name: "Mobile Phones"
+    platform: group
+    services:
+    - service: mobile_app_pixel_7_pro
+      data:
+        data:
+          ttl: 0
+          priority: high
+    - service: mobile_app_pixel_8_pro
+      data:
+        data:
+          ttl: 0
+          priority: high
