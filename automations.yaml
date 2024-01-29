@@ -295,3 +295,71 @@
         target:
           entity_id: light.christmas_lights
   mode: single
+- id: '1706401525303'
+  alias: Arriving Home or Leaving Home
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id:
+    - device_tracker.pixel_7_pro
+    - device_tracker.pixel_8_pro
+    zone: zone.home
+    event: enter
+    id: PhoneEntersHome
+  - platform: zone
+    entity_id:
+    - device_tracker.pixel_7_pro
+    - device_tracker.pixel_8_pro
+    zone: zone.home
+    event: leave
+    id: PhoneLeavesHome
+  condition:
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: >
+        {% set c = state_attr('sensor.pixel_8_pro_bluetooth_connection', 
+        'connected_paired_devices') %}
+        {{ c is not none and c is search('74:95:EC:B9:3F:26') }}
+    - condition: template
+      value_template: >
+        {% set c = state_attr('sensor.pixel_8_pro_bluetooth_connection', 
+        'connected_paired_devices') %}
+        {{ c is not none and c is search('40:F3:08:A3:95:61') }}
+    - condition: template
+      value_template: >
+        {% set c = state_attr('sensor.pixel_7_pro_bluetooth_connection', 
+        'connected_paired_devices') %}
+        {{ c is not none and c is search('74:95:EC:B9:3F:26') }}
+    - condition: template
+      value_template: >
+        {% set c = state_attr('sensor.pixel_7_pro_bluetooth_connection', 
+        'connected_paired_devices') %}
+        {{ c is not none and c is search('40:F3:08:A3:95:61') }}
+  action:
+  - service: notify.mobile_phones
+    metadata: {}
+    data:
+      message: "{% if trigger.event == \"leave\" %}\n  {{ trigger.from_state.attributes.friendly_name
+        }} left {{ trigger.zone.attributes.friendly_name }}\n{% else %}\n  {{ trigger.from_state.attributes.friendly_name
+        }} entered {{ trigger.zone.attributes.friendly_name }}\n{% endif %}\n"
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - PhoneLeavesHome
+      sequence:
+      - device_id: b8ba73e35b47be6483312be1c1144357
+        domain: cover
+        entity_id: cc8f9a79dd12bd084c30ef3111289602
+        type: close
+    - conditions:
+      - condition: trigger
+        id:
+        - PhoneEntersHome
+      sequence:
+      - device_id: b8ba73e35b47be6483312be1c1144357
+        domain: cover
+        entity_id: cc8f9a79dd12bd084c30ef3111289602
+        type: open
+  mode: single
