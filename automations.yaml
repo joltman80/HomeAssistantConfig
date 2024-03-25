@@ -296,20 +296,16 @@
           entity_id: light.christmas_lights
   mode: single
 - id: '1706401525303'
-  alias: Arriving Home or Leaving Home
+  alias: Pixel 8 Arriving Home or Leaving Home
   description: ''
   trigger:
   - platform: zone
-    entity_id:
-    - device_tracker.pixel_7_pro
-    - device_tracker.pixel_8_pro
+    entity_id: device_tracker.pixel_8_pro,device_tracker.pixel_8_pro
     zone: zone.home
     event: enter
     id: PhoneEntersHome
   - platform: zone
-    entity_id:
-    - device_tracker.pixel_7_pro
-    - device_tracker.pixel_8_pro
+    entity_id: device_tracker.pixel_8_pro,device_tracker.pixel_8_pro
     zone: zone.home
     event: leave
     id: PhoneLeavesHome
@@ -317,25 +313,15 @@
   - condition: or
     conditions:
     - condition: template
-      value_template: >
-        {% set c = state_attr('sensor.pixel_8_pro_bluetooth_connection', 
-        'connected_paired_devices') %}
-        {{ c is not none and c is search('74:95:EC:B9:3F:26') }}
+      value_template: '{% set c = state_attr(''sensor.pixel_8_pro_bluetooth_connection'',  ''connected_paired_devices'')
+        %} {{ c is not none and c is search(''74:95:EC:B9:3F:26'') }}
+
+        '
     - condition: template
-      value_template: >
-        {% set c = state_attr('sensor.pixel_8_pro_bluetooth_connection', 
-        'connected_paired_devices') %}
-        {{ c is not none and c is search('40:F3:08:A3:95:61') }}
-    - condition: template
-      value_template: >
-        {% set c = state_attr('sensor.pixel_7_pro_bluetooth_connection', 
-        'connected_paired_devices') %}
-        {{ c is not none and c is search('74:95:EC:B9:3F:26') }}
-    - condition: template
-      value_template: >
-        {% set c = state_attr('sensor.pixel_7_pro_bluetooth_connection', 
-        'connected_paired_devices') %}
-        {{ c is not none and c is search('40:F3:08:A3:95:61') }}
+      value_template: '{% set c = state_attr(''sensor.pixel_8_pro_bluetooth_connection'',  ''connected_paired_devices'')
+        %} {{ c is not none and c is search(''40:F3:08:A3:95:61'') }}
+
+        '
   action:
   - service: notify.mobile_phones
     metadata: {}
