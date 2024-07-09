@@ -31,8 +31,9 @@ wifi:
 
 captive_portal:
 
-dallas:
-  - pin: GPIO18
+one_wire:
+  - platform: gpio
+    pin: GPIO18
 
 switch:
   - platform: gpio
@@ -82,6 +83,6 @@ light:
     output: LED_gpio_19
     
 sensor:
-  - platform: dallas
-    index: 0
+  - platform: dallas_temp
+    address: 0x3b00000f9e360928
     name: "CAD1_tempsensor"    
