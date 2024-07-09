@@ -9,11 +9,13 @@ After the initial Home Assistant OS install, follow these steps:
 2.  After the install, choose to START ON BOOT, WATCHDOG and AUTO UPDATE.
 3.  Open Terminal & SSH and choose CONFIGURATION from the top.
 4.  On your local machine, generate an SSH keypair.  Install the PUBLIC key in the AUTHORIZED KEYS section.
-5.  In the packages section add the following:
+5.  In the Packages section of Terminal & SSH, add the following:
 
 ```console
-gcompat libstdc++ curl grep
+gcompat libstdc++ curl grep procps
 ```
+
+_NOTE: I had to add "procps" after an update sometime around April 2024 that broke SSH.  Used this [thread](https://community.home-assistant.io/t/how-to-use-remote-python-debugging/714317/3).
 6.  Under the SERVER config section, add this:
 
 ```console
