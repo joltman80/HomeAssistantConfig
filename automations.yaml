@@ -187,49 +187,49 @@
   alias: Charlie's Bedtime Lights Automation
   description: Turn off Charlie's lights after 30 minutes if the time is between two
     times which are around his bedtime.
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - input_select.charlie_s_lights
     to: DIM
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - input_select.charlie_s_lights
     to: 'ON'
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - input_select.charlie_s_lights
     from: unavailable
     to: DIM
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - input_select.charlie_s_lights
     from: unknown
     to: DIM
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - input_select.charlie_s_lights
     from: unavailable
     to: 'ON'
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - input_select.charlie_s_lights
     from: unknown
     to: 'ON'
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - input_select.charlie_s_lights
     from: 'ON'
     to: 'ON'
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - input_select.charlie_s_lights
     from: DIM
     to: DIM
-  condition:
+    trigger: state
+  conditions:
   - condition: time
-    after: '19:45:00'
-    before: '23:00:00'
+    after: '19:30:00'
+    before: '23:15:00'
     weekday:
     - sun
     - mon
@@ -238,24 +238,24 @@
     - thu
     - fri
     - sat
-  action:
+  actions:
   - delay:
       hours: 0
       minutes: 30
       seconds: 0
       milliseconds: 0
-  - service: light.turn_off
-    data:
+  - data:
       transition: 5
     target:
       entity_id:
       - light.charlies_analog_dimmer_cad1_led_mushroom_light_output_1_2
       - light.charlies_analog_dimmer_cad1_led_super_star_light_output_2_2
-  - service: input_select.select_option
-    data:
+    action: light.turn_off
+  - data:
       option: 'OFF'
     target:
       entity_id: input_select.charlie_s_lights
+    action: input_select.select_option
   mode: single
 - id: '1700882416969'
   alias: Christmas Lights
@@ -298,18 +298,18 @@
 - id: '1706401525303'
   alias: Pixel 8 Arriving Home or Leaving Home
   description: ''
-  trigger:
-  - platform: zone
-    entity_id: device_tracker.pixel_8_pro,device_tracker.pixel_8_pro
+  triggers:
+  - entity_id: device_tracker.pixel_8_pro
     zone: zone.home
     event: enter
     id: PhoneEntersHome
-  - platform: zone
-    entity_id: device_tracker.pixel_8_pro,device_tracker.pixel_8_pro
+    trigger: zone
+  - entity_id: device_tracker.pixel_8_pro
     zone: zone.home
     event: leave
     id: PhoneLeavesHome
-  condition:
+    trigger: zone
+  conditions:
   - condition: or
     conditions:
     - condition: template
@@ -319,16 +319,28 @@
         '
     - condition: template
       value_template: '{% set c = state_attr(''sensor.pixel_8_pro_bluetooth_connection'',  ''connected_paired_devices'')
+        %} {{ c is not none and c is search(''4C:FC:AA:55:EF:C2'') }}
+
+        '
+    - condition: template
+      value_template: '{% set c = state_attr(''sensor.pixel_8_pro_bluetooth_connection'',  ''connected_paired_devices'')
         %} {{ c is not none and c is search(''40:F3:08:A3:95:61'') }}
 
         '
-  action:
-  - service: notify.mobile_phones
-    metadata: {}
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: cover.gdo_door
+      state:
+      - closing
+      - opening
+  actions:
+  - metadata: {}
     data:
       message: "{% if trigger.event == \"leave\" %}\n  {{ trigger.from_state.attributes.friendly_name
         }} left {{ trigger.zone.attributes.friendly_name }}\n{% else %}\n  {{ trigger.from_state.attributes.friendly_name
         }} entered {{ trigger.zone.attributes.friendly_name }}\n{% endif %}\n"
+    action: notify.mobile_phones
   - choose:
     - conditions:
       - condition: trigger
@@ -348,4 +360,333 @@
         domain: cover
         entity_id: cc8f9a79dd12bd084c30ef3111289602
         type: open
+  mode: single
+- id: '1741898088651'
+  alias: Jims Office RoomKit Call
+  description: ''
+  triggers:
+  - trigger: webhook
+    allowed_methods:
+    - POST
+    - PUT
+    local_only: true
+    webhook_id: ffo-roomkit-call-jkUnNJhp_h6V5eYRw0qPT2AV
+    id: FFO_ON
+  - trigger: webhook
+    allowed_methods:
+    - POST
+    - PUT
+    local_only: true
+    webhook_id: ffo-roomkit-call-bKFyyVA01IUcn0vcQ5AW8Nnq
+    id: FFO_OFF
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - FFO_ON
+      sequence:
+      - action: scene.create
+        metadata: {}
+        data:
+          scene_id: ffo_lighting_beforecall
+          snapshot_entities:
+          - light.office_lamp
+          - light.office_main_lights
+      - action: light.turn_on
+        metadata: {}
+        data:
+          transition: 2
+          brightness_pct: 100
+        target:
+          entity_id: light.ffo_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - FFO_OFF
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        data:
+          transition: 2
+        target:
+          entity_id: scene.ffo_lighting_beforecall
+  mode: single
+- id: '1742003157745'
+  alias: FamilyRoom_Plex_Charlie_Lights
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.plex_plex_for_android_tv_shield_android_tv
+    attribute: username
+    to: Charlie Oltman
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  - trigger: state
+    entity_id:
+    - media_player.plex_plex_for_android_tv_shield_android_tv
+    from: idle
+    to: playing
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+    id: Idle_Playing
+  - trigger: state
+    entity_id:
+    - media_player.plex_plex_for_android_tv_shield_android_tv
+    from: playing
+    to: idle
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+    id: Playing_Idle
+  conditions:
+  - condition: sun
+    before: sunrise
+    before_offset: +00:30:00
+    after: sunset
+    after_offset: -00:15:00
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Idle_Playing
+      sequence:
+      - action: scene.create
+        metadata: {}
+        data:
+          scene_id: tv_show_light_state
+          snapshot_entities:
+          - light.family_room_lamp
+      - action: light.turn_on
+        metadata: {}
+        data:
+          transition: 2
+          brightness_pct: 15
+        target:
+          device_id: e11f1a7da1121850539308bb7128593d
+    - conditions:
+      - condition: trigger
+        id:
+        - Playing_Idle
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        data:
+          transition: 3
+        target:
+          entity_id: scene.tv_show_light_state
+  mode: single
+- id: '1742003858893'
+  alias: FamilyRoom_Plex_Video_Lights
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.plex_plex_for_android_tv_shield_android_tv
+    attribute: username
+    not_to: Charlie Oltman
+  - trigger: state
+    entity_id:
+    - media_player.plex_plex_for_android_tv_shield_android_tv
+    - media_player.plex_pm4k_kodi_11
+    from: unavailable
+    to: playing
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+    id: Idle_Playing
+  - trigger: state
+    entity_id:
+    - media_player.plex_plex_for_android_tv_shield_android_tv
+    - media_player.plex_pm4k_kodi_11
+    from: playing
+    to: unavailable
+    id: Playing_Idle
+  - trigger: state
+    entity_id:
+    - media_player.plex_plex_for_android_tv_shield_android_tv
+    - media_player.plex_pm4k_kodi_11
+    from: playing
+    to: paused
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 3
+    id: Playing_Paused
+  - trigger: state
+    entity_id:
+    - media_player.plex_plex_for_android_tv_shield_android_tv
+    - media_player.plex_pm4k_kodi_11
+    from: paused
+    to: playing
+    id: Paused_Playing
+  - trigger: state
+    entity_id:
+    - media_player.plex_plex_for_android_tv_shield_android_tv
+    - media_player.plex_pm4k_kodi_11
+    from: paused
+    to: unavailable
+    id: Paused_Unavailable
+  conditions:
+  - condition: sun
+    after: sunset
+    after_offset: -00:15:00
+    before: sunrise
+    before_offset: +00:30:00
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Idle_Playing
+      sequence:
+      - action: scene.create
+        metadata: {}
+        data:
+          scene_id: tv_show_light_state
+          snapshot_entities:
+          - light.family_room_lamp
+      - action: light.turn_off
+        metadata: {}
+        data:
+          transition: 3
+        target:
+          entity_id:
+          - light.family_room_lamp
+          - light.kitchen_main_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - Playing_Idle
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        data:
+          transition: 3
+        target:
+          entity_id: scene.tv_show_light_state
+    - conditions:
+      - condition: trigger
+        id:
+        - Playing_Paused
+      sequence:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          transition: 3
+          brightness_pct: 25
+        target:
+          device_id: e11f1a7da1121850539308bb7128593d
+          entity_id: light.kitchen_main_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - Paused_Playing
+      sequence:
+      - action: light.turn_off
+        metadata: {}
+        data:
+          transition: 3
+        target:
+          entity_id:
+          - light.family_room_lamp
+          - light.kitchen_main_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - Paused_Unavailable
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        data:
+          transition: 3
+        target:
+          entity_id: scene.tv_show_light_state
+  mode: single
+- id: '1742080639129'
+  alias: Family Room RK Call Lighting
+  description: ''
+  triggers:
+  - trigger: webhook
+    allowed_methods:
+    - POST
+    - PUT
+    local_only: true
+    webhook_id: fr-roomkit-call-v976eTcFQCCok1pH4JPz2BnQR
+    id: FR_RK_Connected
+  - trigger: webhook
+    allowed_methods:
+    - POST
+    - PUT
+    local_only: true
+    webhook_id: fr-roomkit-call-Iffl1GUx0q5zHOv0tAwD9y343
+    id: FR_RK_Disconnected
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - FR_RK_Connected
+      sequence:
+      - action: scene.create
+        metadata: {}
+        data:
+          scene_id: fr_lighting_beforecall
+          snapshot_entities:
+          - light.family_room_kitchen_lights
+      - action: light.turn_on
+        metadata: {}
+        data:
+          transition: 2
+          brightness_pct: 100
+        target:
+          entity_id: light.family_room_kitchen_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - FR_RK_Disconnected
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        data:
+          transition: 2
+        target:
+          entity_id: scene.fr_lighting_beforecall
+  mode: single
+- id: '1786482786614'
+  alias: '@Let''s encrypt certificate check.'
+  description: Home Assistant certificate will expire in 3 weeks
+  triggers:
+  - at: 03:00:00
+    trigger: time
+  conditions:
+  - condition: template
+    value_template: '{{ (states(''sensor.homeassistant_theoltmanfamily_net_cert_expiry'')
+      | as_datetime - timedelta(days=21)) < now() }}'
+  actions:
+  - data:
+      title: Let's Encrypt
+      message: The Certificate will expire in 3 weeks, trying to renew, please verify
+    action: notify.jims_phone
+  - data:
+      addon: core_letsencrypt
+    action: hassio.addon_start
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - action: homeassistant.restart
+    metadata: {}
+    data: {}
   mode: single
