@@ -19,6 +19,7 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 homeassistant:
+  packages: !include_dir_named packages
   customize:
     zone.home:
       radius: 40
@@ -38,3 +39,7 @@ notify:
         data:
           ttl: 0
           priority: high
+
+media_player:
+  - platform: panasonic_bluray
+    host: 10.0.9.13
