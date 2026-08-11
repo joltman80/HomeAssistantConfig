@@ -10,9 +10,9 @@ frontend:
 tts:
   - platform: google_translate
 
-http:
-  ssl_certificate: /ssl/Home+Assistant.crt
-  ssl_key: /ssl/Home+Assistant.key
+# http:
+#   ssl_certificate: /ssl/Home+Assistant.crt
+#   ssl_key: /ssl/Home+Assistant.key
 
 automation: !include automations.yaml
 script: !include scripts.yaml
@@ -35,6 +35,35 @@ notify:
           ttl: 0
           priority: high
     - service: mobile_app_pixel_8_pro
+      data:
+        data:
+          ttl: 0
+          priority: high
+  - name: "Jims Phone"
+    platform: group
+    services:
+    - service: mobile_app_pixel_8_pro
+      data:
+        data:
+          ttl: 0
+          priority: high
+  - name: "Jims Mobile Devices"
+    platform: group
+    services:
+    - service: mobile_app_pixel_8_pro
+      data:
+        data:
+          ttl: 0
+          priority: high
+    - service: mobile_app_jim_oltmans_ipad_20
+      data:
+        data:
+          ttl: 0
+          priority: high
+  - name: "Vals Phone"
+    platform: group
+    services:
+    - service: mobile_app_pixel_7_pro
       data:
         data:
           ttl: 0
